@@ -1,6 +1,6 @@
 # cron2db
 
-Store cron results in a database
+Store cron results in a database. Work in progress - currently unusable.
 
 
 # Installation
@@ -10,12 +10,11 @@ Here are [installation instructions](https://github.com/mitsuhiko/pipsi#readme).
 
 Simply run:
 
-    $ pipsi install .
+	$ pipsi install .
 
 
 # Usage
 
 To use it:
 
-    $ c2db --help
-
+	$ c2db --help
