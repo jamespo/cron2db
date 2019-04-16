@@ -1,6 +1,7 @@
+import datetime
 import pytest
 from click.testing import CliRunner
-from cron2db import cli, CronDB
+from cron2db import cli, CronDB, __version__
 from tempfile import NamedTemporaryFile
 from os import remove
 
@@ -39,12 +40,23 @@ def test_cli(runner):
 def test_add_from_files(dummy_output):
     ((se_tmp, se_tmp_content), (so_tmp, so_tmp_content)) = dummy_output
     status = 1
+    start_ep, end_ep = 1555405296, 1555405299  # job start & end
     cdb = CronDB(engine='sqlite:///:memory:')  # initialize blank DB
-    cdb.add_from_files('testcron.sh', se_tmp.name, so_tmp.name, status)
+    cdb.add_from_files('testcron.sh', se_tmp.name, so_tmp.name, status,
+                       start_ep, end_ep)
     top_result = next(cdb.return_all())      # only one entry
     assert top_result.stderr == se_tmp_content.decode("utf-8")
     assert top_result.stdout == so_tmp_content.decode("utf-8")
-    assert top_result.status == 1
+    assert top_result.status == status
+    assert top_result.start == datetime.datetime.fromtimestamp(start_ep)
+    assert top_result.end == datetime.datetime.fromtimestamp(end_ep)
+
+
+def test_check_version():
+    '''check version #'''
+    cdb = CronDB(engine='sqlite:///:memory:')
+    assert cdb.get_conf_entry('version') == __version__
+
 
 # def test_cli(runner):
 #     result = runner.invoke(cli.main)
