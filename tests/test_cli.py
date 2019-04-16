@@ -1,7 +1,9 @@
 import datetime
 import pytest
 from click.testing import CliRunner
-from cron2db import cli, CronDB, __version__
+from cron2db import cli
+from cron2db.db import CronDB
+from cron2db.version import __version__
 from tempfile import NamedTemporaryFile
 from os import remove
 

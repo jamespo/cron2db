@@ -1,5 +1,5 @@
 import click
-from cron2db import CronDB, Config
+from cron2db.db import CronDB, Config
 
 
 @click.command()

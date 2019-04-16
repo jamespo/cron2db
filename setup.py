@@ -2,12 +2,13 @@
 Store cron results in a database
 """
 from setuptools import find_packages, setup
+from cron2db.version import __version__
 
 dependencies = ['click', 'SQLAlchemy']
 
 setup(
     name='cron2db',
-    version='0.1.0',
+    version=__version__,
     url='https://github.com/jamespo/cron2db',
     license='BSD',
     author='James Powell',
