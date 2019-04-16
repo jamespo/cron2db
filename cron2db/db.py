@@ -3,7 +3,7 @@ import datetime
 import platform
 import os.path
 from cron2db.version import __version__
-from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, exc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -46,10 +46,10 @@ class CronDB():
     def __init__(self, engine):
         self.engine = create_engine(engine)
         self.Session = sessionmaker(bind=self.engine)
+        # check if schema exists, create if not
         try:
-            # check if schema exists
             assert self.get_conf_entry('version') == __version__
-        except:
+        except exc.OperationalError:
             self._create_schema()
 
     def _create_schema(self):
