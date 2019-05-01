@@ -1,3 +1,18 @@
 #!/bin/bash
 
 # cron2db
+
+# get script path in $C2DB
+if [[ $(type -P c2db) ]]; then
+    # python script in $PATH
+    C2DB=c2db
+else
+    # this assumes c2db & cron2b are in the same dir
+    SPATH=$(dirname $(cat /proc/$$/cmdline | cut -d '' -f 2))
+    C2DB="$SPATH/c2db"
+    if [ ! -x $C2DB ]; then   # check if executable
+	echo "c2db not found! quitting"
+	exit
+    fi
+fi
+
