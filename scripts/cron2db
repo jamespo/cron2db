@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # cron2db
+# Copyright 2019 James Powell.
+# Public Domain CC0: http://creativecommons.org/publicdomain/zero/1.0/
 
 # get script path in $C2DB
 if [[ $(type -P c2db) ]]; then
@@ -11,8 +13,35 @@ else
     SPATH=$(dirname $(cat /proc/$$/cmdline | cut -d '' -f 2))
     C2DB="$SPATH/c2db"
     if [ ! -x $C2DB ]; then   # check if executable
-	echo "c2db not found! quitting"
+	echo "ERROR: c2db not found! Quitting"
 	exit
     fi
 fi
 
+set -eu
+
+TMP=$(mktemp -d)
+OUT=$TMP/cron2db.out
+ERR=$TMP/cron2db.err
+TRACE=$TMP/cron2db.trace
+
+# run the command
+START=$(date +%s)
+set +e
+"$@" >$OUT 2>$TRACE
+RESULT=$?
+set -e
+END=$(date +%s)
+
+PATTERN="^${PS4:0:1}\\+${PS4:1}"
+if grep -aq "$PATTERN" $TRACE
+then
+    ! grep -av "$PATTERN" $TRACE > $ERR
+else
+    ERR=$TRACE
+fi
+
+# log results in DB
+c2db --cmd "$@" --stderr $ERR --stdout $OUT --start $START --end $END --rc $RESULT
+
+rm -rf "$TMP"
