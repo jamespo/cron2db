@@ -13,8 +13,10 @@ else
     SPATH=$(dirname $(cat /proc/$$/cmdline | cut -d '' -f 2))
     C2DB="$SPATH/c2db"
     if [ ! -x $C2DB ]; then   # check if executable
-	echo "ERROR: c2db not found! Quitting"
-	exit
+	echo "WARNING: c2db not found - jobs won't be logged"
+	# just run normally
+	"$@"
+	exit 1
     fi
 fi
 
@@ -42,6 +44,6 @@ else
 fi
 
 # log results in DB
-c2db --cmd "$@" --stderr $ERR --stdout $OUT --start $START --end $END --rc $RESULT
+$C2DB --cmd "$@" --stderr $ERR --stdout $OUT --start $START --end $END --rc $RESULT
 
 rm -rf "$TMP"

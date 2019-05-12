@@ -14,7 +14,7 @@ def main(mode, cmd, stderr, stdout, rc, start, end):
     """Store cron results in a database"""
     cf = Config()
     cj = CronDB(engine=cf.config['cron2db']['database'])
-    if mode == 'list':
+    if mode in ('list', 'ls'):
         print(list(cj.return_all()))
     elif mode == 'add':
         cj.add(cmd, stderr, stdout, rc, start, end)
