@@ -1,1 +1,45 @@
-cron2db
+<h1>cron2db</h1>
+<p>Store cron results in a database. </p>
+<p>This is a pair of scripts:</p>
+<ul>
+<li>
+<p><strong>cron2db</strong> - a bash script runs the command with arguments and passes the return code, stdout, stderr, start &amp; end time to c2db</p>
+</li>
+<li>
+<p><strong>c2db</strong> - a python 3 script which stores the job run in the configured database</p>
+</li>
+</ul>
+<p><strong>Work in progress - ALPHA.</strong></p>
+<h2>Installation</h2>
+<pre><code>python setup.py install
+</code></pre>
+<p>(Into a virtualenv or wherever)</p>
+<p>Or you can use <a href="https://github.com/mitsuhiko/pipsi#readme">pipsi</a> &amp;</p>
+<pre><code>pipsi install .
+</code></pre>
+<p>SQLAlchemy is used for the DB layer so if you intend to use a DB other than the default sqlite you should install the appropriate drivers.</p>
+<h2>Configuration</h2>
+<p>You may want to configure cron such that cron2db &amp; c2db are in cron's path <em>(<a href="https://stackoverflow.com/questions/2388087/how-to-get-cron-to-call-in-the-correct-paths">more info</a>)</em>. You can do this by <em>carefully</em> adding a PATH line to the systemwide crontab (/etc/crontab) or to your user crontab, eg:</p>
+<pre><code>$ crontab -e
+
+SHELL=/bin/sh
+PATH=/path/to/cron2db:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+10 * * * 1-5    cron2db 'myscript.sh arg1 arg2'
+</code></pre>
+<p>You can initialize a default config file &amp; sqlite DB by just running</p>
+<pre><code>c2db init
+</code></pre>
+<p>This creates ~/.config/cron2db.conf &amp; ~/.config/cron2db.sqlite</p>
+<h2>Usage</h2>
+<p>Old cron entry:</p>
+<pre><code>10 * * * 1-5    myscript.sh arg1 arg2
+</code></pre>
+<p>New cron2db cron entry with results stored in DB</p>
+<pre><code>10 * * * 1-5    /pathto/cron2db 'myscript.sh arg1 arg2'
+</code></pre>
+<p>Also see Configuration for setting cron path above.</p>
+<p>A manual test run of your scripts through cron2db is advised before trusting your cron jobs with it.</p>
+<h2>Other</h2>
+<p>Inspiration &amp; some code taken from <a href="https://habilis.net/cronic/">cronic</a>.</p>
+<p>License: <em>Public Domain CC0: http://creativecommons.org/publicdomain/zero/1.0/</em></p>
