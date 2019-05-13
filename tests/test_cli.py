@@ -34,7 +34,7 @@ def _write_file(f_content):
 
 
 def test_cli(runner):
-    result = runner.invoke(cli.main)
+    result = runner.invoke(cli.main, args='init')
     assert result.exit_code == 0
     assert not result.exception
 
