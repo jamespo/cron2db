@@ -1,8 +1,8 @@
 # cron2db
 
-Store cron results in a database. 
+Store cron results in a database using a wrapper. Can also be used with systemd timer units (as these don't mail errors).
 
-This is a pair of scripts:
+cron2db comprises of a pair of scripts:
 
 * __cron2db__ - a bash script runs the command with arguments and passes the return code, stdout, stderr, start & end time to c2db
 
