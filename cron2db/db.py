@@ -31,14 +31,12 @@ class CronJob(Base):
     end = Column(DateTime)
     hostname = Column(String(60), default=platform.node())
 
-    # def __init__(self, job, stdout, stderr, status):
-    #     self.job = job
-    #     self.stdout = stdout
-    #     self.stderr = stderr
-    #     self.status = status
-
     def __repr__(self):
         return '<Job %r>' % self.job
+
+    def __str__(self):
+        return "Job: %s\nStart: %s\nEnd: %s\nStdout: %s\nStderr: %s" % \
+            (self.job, self.start, self.end, self.stdout, self.stderr)
 
 
 class CronDB():
