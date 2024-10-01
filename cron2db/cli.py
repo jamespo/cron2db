@@ -7,7 +7,7 @@ from cron2db.db import CronDB, Config
 @click.option('--stderr', help='Path to stderr file')
 @click.option('--stdout', help='Path to stdout file')
 @click.option('--start', help='start time (epoch seconds)', type=int)
-@click.option('--end', help='start time (epoch seconds)', type=int)
+@click.option('--end', help='end time (epoch seconds)', type=int)
 @click.option('--rc', help='return code', type=int)
 @click.argument('mode', default='add')
 def main(mode, cmd, stderr, stdout, rc, start, end):
@@ -16,9 +16,11 @@ def main(mode, cmd, stderr, stdout, rc, start, end):
     cj = CronDB(engine=cf.config['cron2db']['database'])
     if mode in ('list', 'ls'):
         print(list(cj.return_all()))
-    elif mode == 'add':
-        cj.add(cmd, stderr, stdout, rc, start, end)
     elif mode in ('init', 'initialize'):
         pass
+    elif mode == 'add' and cmd is not None:
+        cj.add(cmd, stderr, stdout, rc, start, end)
     else:
-        raise ValueError
+        ctx = click.get_current_context()
+        click.echo(ctx.get_help())
+        ctx.exit()
